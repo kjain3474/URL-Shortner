@@ -8,7 +8,7 @@ const path = require('path');
 var mysql = require('mysql');
 const shortid = require('shortid');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 var connection = null;
 
 //connect to MySQL DB
@@ -17,11 +17,32 @@ connectDB();
 //set App Options
 setAppOptions();
 
-//check if server is working
-app.get('/', (req, res) => {
-   res.json({success: 'ok'});
+//get all urls
+app.get('/geturls', (req, res) => {
+    connection.query('SELECT full, short FROM url_shortner', function (error, results, fields) {
+        if (error){   
+            res.json({error: "Unable to Fetch Data"});
+        }
+        else{
+            res.json({success: results});
+        }
+    });
 });
 
+//convert short to long url and route
+app.get('/:shortUrl', (req, res) => {
+
+    connection.query('SELECT full FROM url_shortner WHERE short = ?', [req.params.shortUrl],  function (error, results, fields) {
+        if (error){   
+            console.log("Unable to find");
+        }
+        else{
+           res.redirect(results[0].full);
+        }
+    });
+  
+    
+  })
 
 app.get('/checkUrlShortCount', (req, res) => {
 
