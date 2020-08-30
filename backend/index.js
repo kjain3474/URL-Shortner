@@ -7,9 +7,11 @@ const dotenv = require('dotenv').config()
 const path = require('path');
 var mysql = require('mysql');
 const shortid = require('shortid');
+var events = require('events');
 
 const PORT = process.env.PORT || 5000;
 var connection = null;
+var eventEmitter = new events.EventEmitter();
 
 //connect to MySQL DB
 connectDB();
@@ -18,7 +20,7 @@ connectDB();
 setAppOptions();
 
 //get all urls
-app.get('/geturls', (req, res) => {
+app.get('/api/geturls', (req, res) => {
     connection.query('SELECT full, short FROM url_shortner', function (error, results, fields) {
         if (error){   
             res.json({error: "Unable to Fetch Data"});
@@ -29,7 +31,7 @@ app.get('/geturls', (req, res) => {
     });
 });
 
-//convert short to long url and route
+//Get Full Link Output
 app.get('/:shortUrl', (req, res) => {
 
     connection.query('SELECT full FROM url_shortner WHERE short = ?', [req.params.shortUrl],  function (error, results, fields) {
@@ -37,14 +39,17 @@ app.get('/:shortUrl', (req, res) => {
             console.log("Unable to find");
         }
         else{
-           res.redirect(results[0].full);
+            res.redirect(results[0].full);
         }
     });
+    
   
     
   })
 
-app.get('/checkUrlShortCount', (req, res) => {
+
+//get short url count
+app.get('/api/checkUrlShortCount', (req, res) => {
 
     var queryObject = url.parse(req.url,true).query;
 
@@ -61,13 +66,14 @@ app.get('/checkUrlShortCount', (req, res) => {
     
  });
 
-app.post('/shortUrls', async (req, res) => {
+//convert short to long url and route
+app.post('/api/shortUrls', (req, res) => {
 
     var data = req.body;
     
-    var short = await generateShortUrl();
+    var short = generateShortUrl();
 
-    var isUrlValid = await CheckIfUrlValid(data.full);
+    var isUrlValid = CheckIfUrlValid(data.full);
 
     if(isUrlValid === false) 
     {
@@ -124,6 +130,7 @@ function setAppOptions(){
     app.use(cors({ allowedHeaders: 'Content-Type, Cache-Control' }));
     app.options('*', cors());
     app.use(bodyParser.json())
+    app.use(express.urlencoded({ extended: false }))
 }
 
 

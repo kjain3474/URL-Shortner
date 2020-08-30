@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 30, 2020 at 07:20 PM
+-- Generation Time: Aug 29, 2020 at 04:17 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.2.30
 
@@ -34,6 +34,13 @@ CREATE TABLE `url_shortner` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `url_shortner`
+--
+
+INSERT INTO `url_shortner` (`id`, `full`, `short`) VALUES
+(23, 'https://icarusinnovations.co.sdd/ss', 'fD5uImerp');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -51,7 +58,7 @@ ALTER TABLE `url_shortner`
 -- AUTO_INCREMENT for table `url_shortner`
 --
 ALTER TABLE `url_shortner`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

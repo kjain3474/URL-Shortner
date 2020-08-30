@@ -29,8 +29,8 @@ const UrlList = (props: {urls: Urls[]}) =>  {
   <tbody>
     {urls.map((url) =>
         <tr key={Math.random()}>
-            <td><a href="{url.full}">{url.full}</a></td>
-            <td><a href={`http://localhost:5000/${url.short}`} target="_blank" rel="noopener noreferrer">{url.short}</a></td>
+            <td><a href={url.full} target="_blank" rel="noopener noreferrer">{url.full}</a></td>
+            <td><a href={`http://localhost:5000/${url.short}`}  target="_blank" rel="noopener noreferrer">short.url/{url.short}</a></td>
         </tr>
     )}
   </tbody>
@@ -54,7 +54,7 @@ class App extends Component<{}, UrlState> {
       return;
     }
     
-    axios.post<any>('http://localhost:5000/shortUrls', {full: this.state.url})
+    axios.post<any>('http://localhost:5000/api/shortUrls', {full: this.state.url})
     .then(response => {
       if(response.data.success){
         console.log(response.data.success);
@@ -71,7 +71,7 @@ class App extends Component<{}, UrlState> {
 
 
   componentDidMount() {
-    axios.get<any>('http://localhost:5000/geturls')
+    axios.get<any>('http://localhost:5000/api/geturls')
       .then(response =>{
         this.setState({list: [...response.data.success]});
       });
@@ -89,7 +89,7 @@ class App extends Component<{}, UrlState> {
           <input
             required
             id="url"
-            type="text"
+            type="url"
             name="url"
             placeholder="Add Url"
             onChange={this.onChange}
